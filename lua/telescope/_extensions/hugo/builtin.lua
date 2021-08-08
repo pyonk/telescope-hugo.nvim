@@ -51,24 +51,24 @@ local function gen_from_hugo(opts)
 end
 
 M.list = function(opts)
-    opts = opts or {}
-    opts.cwd = opts.source or vim.env.PWD
-    opts.entry_maker = gen_from_hugo(opts)
-    pickers.new(opts, {
-        prompt_title = 'Hugo contents',
-        finder = finders.new_oneshot_job({'hugo', 'list', 'all'}, opts),
-        sorter = conf.file_sorter(opts),
-        previewer = previewers.new_termopen_previewer{
-          get_command = function(entry, _)
-              if vim.fn.executable(opts.preview_cmd) == 1 then
-                return {opts.preview_cmd, entry.path}
-              elseif vim.fn.executable'bat' == 1 then
-                return {'bat', '--style', 'header,grid', entry.path}
-              end
-              return {'cat', entry.path}
-          end,
-        },
-    }):find()
+  opts = opts or {}
+  opts.cwd = opts.source or vim.env.PWD
+  opts.entry_maker = gen_from_hugo(opts)
+  pickers.new(opts, {
+      prompt_title = 'Hugo contents',
+      finder = finders.new_oneshot_job({'hugo', 'list', 'all'}, opts),
+      sorter = conf.file_sorter(opts),
+      previewer = previewers.new_termopen_previewer{
+        get_command = function(entry, _)
+            if vim.fn.executable(opts.preview_cmd) == 1 then
+              return {opts.preview_cmd, entry.path}
+            elseif vim.fn.executable'bat' == 1 then
+              return {'bat', '--style', 'header,grid', entry.path}
+            end
+            return {'cat', entry.path}
+        end,
+      },
+  }):find()
 end
 
 return M
