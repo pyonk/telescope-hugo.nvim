@@ -1,3 +1,4 @@
+local utils = require'telescope.utils'
 local finders = require'telescope.finders'
 local pickers = require'telescope.pickers'
 local previewers = require'telescope.previewers'
@@ -36,7 +37,7 @@ local function gen_from_hugo(opts)
 
   return function(line)
     local fields = vim.split(line, sep, true)
-    local path = vim.fn.expand(opts.cwd..Path.path.sep..fields[1])
+    local path = tostring(Path:new(vim.fn.expand(opts.cwd), fields[1]))
     if vim.fn.filereadable(path) == 0 then
       return nil
     end
@@ -50,9 +51,16 @@ local function gen_from_hugo(opts)
   end
 end
 
-M.list = function(opts)
+local function get_default_opts(opts)
   opts = opts or {}
   opts.cwd = opts.source or vim.env.PWD
+  return opts
+end
+
+
+
+M.list = function(opts)
+  opts = get_default_opts(opts)
   opts.entry_maker = gen_from_hugo(opts)
   pickers.new(opts, {
       prompt_title = 'Hugo contents',
@@ -69,6 +77,30 @@ M.list = function(opts)
         end,
       },
   }):find()
+end
+
+M.new = function(opts)
+  opts = get_default_opts(opts)
+  opts.content_dir = opts.content_dir or ""
+  vim.fn.inputsave()
+  local new_filename = vim.fn.input("Input new filename > "..tostring(Path:new(vim.fn.expand(opts.cwd), opts.content_dir))..Path.path.sep)
+  vim.cmd("redraw")
+  if new_filename == "" then
+    return
+  end
+  vim.fn.inputrestore()
+  local out, ret, err = utils.get_os_command_output({"hugo", "new", tostring(Path:new(opts.content_dir, new_filename))}, opts.cwd)
+  if ret == 255 then
+    if err[1] then
+      return echo(err[1])
+    end
+    return echo("Something wrong.")
+  end
+  echo(out[1])
+  local splited = vim.split(out[1], " ", true)
+  table.remove(splited)
+  local created_file = table.concat(splited, " ")
+  vim.cmd("edit "..created_file)
 end
 
 return M

@@ -32,7 +32,23 @@ Add these following plugins.
 :Telescope hugo list preview_cmd=glow
 ```
 
+### new
+```
+:Telescope hugo new [options]
+```
+#### options
+- source
+```
+:Telescope hugo new source=YOUR_SITE_DIR
+```
+- content_dir
+```
+:Telescope hugo list content_dir=posts
+```
+
+
 ## TODO
-- [ ] `hugo new`
+- [x] `hugo new`
 - [ ] `hugo grep`
+
 etc...
