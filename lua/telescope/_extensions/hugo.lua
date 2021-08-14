@@ -4,5 +4,6 @@ return require'telescope'.register_extension{
   exports = {
     new = hugo_builtin.new,
     list = hugo_builtin.list,
+    grep = hugo_builtin.grep,
   },
 }

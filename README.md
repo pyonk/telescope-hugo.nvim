@@ -43,12 +43,35 @@ Add these following plugins.
 ```
 - content_dir
 ```
-:Telescope hugo list content_dir=posts
+:Telescope hugo new content_dir=content/posts
 ```
 
+### grep
+```
+:Telescope hugo grep [options]
+```
+#### options
+- source
+```
+:Telescope hugo grep source=YOUR_SITE_DIR
+```
+- content_dir
+```
+:Telescope hugo grep content_dir=another
+```
+- search_dir
+```
+:Telescope hugo grep search_dir=posts
+```
+- preview_cmd
+```
+:Telescope hugo grep preview_cmd=glow
+```
 
 ## TODO
 - [x] `hugo new`
-- [ ] `hugo grep`
+- [x] `hugo grep`
+- [ ] configuration in vimrc
+- [ ] refactoring
 
 etc...

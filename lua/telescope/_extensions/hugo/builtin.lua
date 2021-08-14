@@ -5,6 +5,7 @@ local previewers = require'telescope.previewers'
 local conf = require'telescope.config'.values
 local entry_display = require'telescope.pickers.entry_display'
 local Path = require'plenary.path'
+local files = require'telescope.builtin.files'
 
 local M = {}
 
@@ -102,6 +103,25 @@ M.new = function(opts)
   table.remove(splited)
   local created_file = table.concat(splited, " ")
   vim.cmd("edit "..created_file)
+end
+
+M.grep = function(opts)
+  opts = get_default_opts(opts)
+  opts.preview_cmd = opts.preview_cmd or ""
+  opts.content_dir = opts.content_dir or "content"
+  opts.search_dirs = {tostring(Path.new(opts.cwd, opts.content_dir, opts.search_dir or ""))}
+  echo(opts.preview_cmd)
+  opts.previewer = previewers.new_termopen_previewer{
+    get_command = function(entry, _)
+        if opts.preview_cmd ~= "" and vim.fn.executable(opts.preview_cmd) == 1 then
+          return {opts.preview_cmd, entry.path}
+        elseif vim.fn.executable'bat' == 1 then
+          return {'bat', '--style', 'header,grid', entry.path}
+        end
+        return {'cat', entry.path}
+    end,
+  }
+  files.live_grep(opts)
 end
 
 return M
