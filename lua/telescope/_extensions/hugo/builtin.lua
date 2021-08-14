@@ -37,7 +37,7 @@ local function gen_from_hugo(opts)
 
   return function(line)
     local fields = vim.split(line, sep, true)
-    local path = tostring(Path:new(vim.fn.expand(opts.cwd), fields[1]))
+    local path = tostring(Path:new(opts.cwd, fields[1]))
     if vim.fn.filereadable(path) == 0 then
       return nil
     end
@@ -53,7 +53,7 @@ end
 
 local function get_default_opts(opts)
   opts = opts or {}
-  opts.cwd = opts.source or vim.env.PWD
+  opts.cwd = vim.fn.expand(opts.source) or vim.env.PWD
   return opts
 end
 
@@ -62,13 +62,14 @@ end
 M.list = function(opts)
   opts = get_default_opts(opts)
   opts.entry_maker = gen_from_hugo(opts)
+  opts.preview_cmd = opts.preview_cmd or ""
   pickers.new(opts, {
       prompt_title = 'Hugo contents',
       finder = finders.new_oneshot_job({'hugo', 'list', 'all'}, opts),
       sorter = conf.file_sorter(opts),
       previewer = previewers.new_termopen_previewer{
         get_command = function(entry, _)
-            if vim.fn.executable(opts.preview_cmd) == 1 then
+            if opts.preview_cmd ~= "" and vim.fn.executable(opts.preview_cmd) == 1 then
               return {opts.preview_cmd, entry.path}
             elseif vim.fn.executable'bat' == 1 then
               return {'bat', '--style', 'header,grid', entry.path}
