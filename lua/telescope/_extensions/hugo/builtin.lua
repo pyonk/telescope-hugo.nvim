@@ -82,7 +82,7 @@ end
 
 M.new = function(opts)
   opts = get_default_opts(opts)
-  opts.content_dir = opts.content_dir or ""
+  opts.content_dir = opts.content_dir or "content"
   vim.fn.inputsave()
   local new_filename = vim.fn.input("Input new filename > "..tostring(Path:new(vim.fn.expand(opts.cwd), opts.content_dir))..Path.path.sep)
   vim.cmd("redraw")
