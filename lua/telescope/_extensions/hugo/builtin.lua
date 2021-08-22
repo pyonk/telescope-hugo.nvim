@@ -91,7 +91,7 @@ M.new = function(opts)
     return
   end
   vim.fn.inputrestore()
-  local out, ret, err = utils.get_os_command_output({"hugo", "new", tostring(Path:new(opts.content_dir, new_filename))}, opts.cwd)
+  local out, ret, err = utils.get_os_command_output({"hugo", "new", tostring(Path:new(new_filename))}, opts.cwd)
   if ret == 255 then
     if err[1] then
       return echo(err[1])

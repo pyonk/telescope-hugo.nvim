@@ -32,6 +32,8 @@ Add these following plugins.
 :Telescope hugo list preview_cmd=glow
 ```
 
+---
+
 ### new
 ```
 :Telescope hugo new [options]
@@ -45,6 +47,8 @@ Add these following plugins.
 ```
 :Telescope hugo new content_dir=content/posts
 ```
+
+---
 
 ### grep
 ```
