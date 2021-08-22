@@ -54,7 +54,7 @@ end
 
 local function get_default_opts(opts)
   opts = opts or {}
-  opts.cwd = vim.fn.expand(opts.source) or vim.env.PWD
+  opts.cwd = vim.fn.expand(opts.source or vim.env.PWD)
   return opts
 end
 
